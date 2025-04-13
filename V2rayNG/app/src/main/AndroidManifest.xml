@@ -11,7 +11,7 @@
         android:xlargeScreens="true" />
 
     <uses-sdk
-        android:minSdkVersion="21"
+        android:minSdkVersion="30"
         tools:overrideLibrary="com.blacksquircle.ui.editorkit" />
 
     <uses-feature
