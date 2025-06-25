@@ -105,6 +105,11 @@ jobs:
       run: |
         cp -r ${{ github.workspace }}/hysteria/libs ${{ github.workspace }}/V2rayNG/app
 
+    - name: Refactor package name
+      run: |
+        chmod +x refactor_package.sh
+        ./refactor_package.sh
+
     - name: Setup Java
       uses: actions/setup-java@v4.7.0
       with:
