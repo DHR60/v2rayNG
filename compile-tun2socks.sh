@@ -49,7 +49,7 @@ ln -s "$__dir/hev-socks5-tunnel" jni/hev-socks5-tunnel
 	APP_PLATFORM=android-21 \
     NDK_LIBS_OUT="$HEVTUN_TMP/libs" \
     NDK_OUT="$HEVTUN_TMP/obj" \
-    "APP_CFLAGS=-O3 -DPKGNAME=com/v2ray/ang/service" \
+    "APP_CFLAGS=-O3 -DPKGNAME=com/clearpath/vng/service" \
     "APP_LDFLAGS=-WI,--build-id=none -WI,--hash-style=gnu" \
 
 cp -r "$HEVTUN_TMP/libs/"* "$__dir/libs/"
