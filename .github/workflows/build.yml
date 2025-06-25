@@ -105,6 +105,10 @@ jobs:
       run: |
         cp -r ${{ github.workspace }}/hysteria/libs ${{ github.workspace }}/V2rayNG/app
 
+    - name: Refactor package name
+      run: |
+        python3 refactor_package.py
+
     - name: Setup Java
       uses: actions/setup-java@v4.7.0
       with:
