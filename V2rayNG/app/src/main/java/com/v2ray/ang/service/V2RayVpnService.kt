@@ -358,18 +358,28 @@ class V2RayVpnService : VpnService(), ServiceControl {
         V2RayServiceManager.stopCoreLoop()
 
         if (isForced) {
-            //stopSelf has to be called ahead of mInterface.close(). otherwise v2ray core cannot be stooped
-            //It's strage but true.
-            //This can be verified by putting stopself() behind and call stopLoop and startLoop
-            //in a row for several times. You will find that later created v2ray core report port in use
-            //which means the first v2ray core somehow failed to stop and release the port.
-            stopSelf()
-
-            try {
-                mInterface.close()
-            } catch (e: Exception) {
-                Log.e(AppConfig.TAG, "Failed to close VPN interface", e)
-            }
+//            //stopSelf has to be called ahead of mInterface.close(). otherwise v2ray core cannot be stooped
+//            //It's strage but true.
+//            //This can be verified by putting stopself() behind and call stopLoop and startLoop
+//            //in a row for several times. You will find that later created v2ray core report port in use
+//            //which means the first v2ray core somehow failed to stop and release the port.
+//            stopSelf()
+//
+//            try {
+//                mInterface.close()
+//            } catch (e: Exception) {
+//                Log.e(AppConfig.TAG, "Failed to close VPN interface", e)
+//            }
+            killV2RayProcess()
         }
+    }
+
+    private fun killV2RayProcess() {
+        try {
+            process.destroy()
+        } catch (e: Exception) {
+            Log.e(AppConfig.TAG, "Failed to destroy process", e)
+        }
+        android.os.Process.killProcess(android.os.Process.myPid())
     }
 }
