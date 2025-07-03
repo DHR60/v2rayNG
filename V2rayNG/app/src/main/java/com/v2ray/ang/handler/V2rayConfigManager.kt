@@ -626,10 +626,15 @@ object V2rayConfigManager {
             try {
                 val userHosts = MmkvManager.decodeSettingsString(AppConfig.PREF_DNS_HOSTS)
                 if (userHosts.isNotNullEmpty()) {
-                    var userHostsMap = userHosts?.split(",")
+                    val userHostsMap = userHosts?.lines()
                         ?.filter { it.isNotEmpty() }
-                        ?.filter { it.contains(":") }
-                        ?.associate { it.split(":").let { (k, v) -> k to v } }
+                        ?.filter { it.contains(" ") }
+                        ?.associate { line ->
+                            val parts = line.trim().split("\\s+".toRegex())
+                            val key = parts[0]
+                            val values = parts.drop(1)
+                            key to if (values.size == 1) values[0] else values
+                        }
                     if (userHostsMap != null) hosts.putAll(userHostsMap)
                 }
             } catch (e: Exception) {
