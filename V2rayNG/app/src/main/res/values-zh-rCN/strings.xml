@@ -203,8 +203,8 @@
     <string name="title_pref_domestic_dns">境内 DNS (可选)</string>
     <string name="summary_pref_domestic_dns">DNS</string>
 
-    <string name="title_pref_dns_hosts">DNS hosts (格式: 域名: 地址,…)</string>
-    <string name="summary_pref_dns_hosts">domain: address,…</string>
+    <string name="title_pref_dns_hosts">DNS hosts (格式: “域名 地址1 地址2” 每行一个)</string>
+    <string name="summary_pref_dns_hosts">domain address1 address2\n…</string>
 
     <string name="title_pref_delay_test_url">真连接延迟测试网址 </string>
     <string name="summary_pref_delay_test_url">Url</string>
