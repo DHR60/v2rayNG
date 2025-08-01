@@ -2,6 +2,8 @@ package com.v2ray.ang.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -188,6 +190,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                 } else {
+                    setExcludeFromRecents(true)
                     isEnabled = false
                     onBackPressedDispatcher.onBackPressed()
                     isEnabled = true
@@ -282,6 +285,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     public override fun onResume() {
         super.onResume()
+        setExcludeFromRecents(false)
         mainViewModel.reloadServerList()
     }
 
@@ -669,10 +673,25 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
+            setExcludeFromRecents(true)
             moveTaskToBack(false)
             return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    /**
+     * 设置应用是否从最近任务中隐藏
+     */
+    private fun setExcludeFromRecents(exclude: Boolean) {
+        try {
+            val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            activityManager.appTasks.forEach { task ->
+                task.setExcludeFromRecents(exclude)
+            }
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Failed to set excludeFromRecents", e)
+        }
     }
 
 
