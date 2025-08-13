@@ -82,7 +82,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             AppConfig.PREF_DOUBLE_COLUMN_DISPLAY,
             AppConfig.SUBSCRIPTION_AUTO_UPDATE,
             AppConfig.PREF_FRAGMENT_ENABLED,
-            AppConfig.PREF_MUX_ENABLED
+            AppConfig.PREF_MUX_ENABLED,
+            AppConfig.PREF_EXCLUDE_FROM_RECENT
                 -> {
                 MmkvManager.encodeSettings(key, sharedPreferences.getBoolean(key, false))
             }
