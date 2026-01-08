@@ -215,6 +215,12 @@
             android:key="pref_dns_serve_stale"
             android:title="@string/title_dns_serve_stale" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_exclude_from_recent"
+            android:summary="@string/summary_pref_exclude_from_recent"
+            android:title="@string/title_pref_exclude_from_recent" />
+
         <ListPreference
             android:defaultValue="warning"
             android:entries="@array/core_loglevel"
