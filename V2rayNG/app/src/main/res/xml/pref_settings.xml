@@ -167,6 +167,11 @@
             android:summary="@string/summary_pref_dns_hosts"
             android:title="@string/title_pref_dns_hosts" />
 
+        <CheckBoxPreference
+            android:key="pref_exclude_from_recent"
+            android:summary="@string/summary_pref_exclude_from_recent"
+            android:title="@string/title_pref_exclude_from_recent" />
+
         <ListPreference
             android:defaultValue="warning"
             android:entries="@array/core_loglevel"
