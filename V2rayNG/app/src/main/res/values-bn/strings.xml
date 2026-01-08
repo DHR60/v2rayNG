@@ -503,6 +503,8 @@
         <item>রেজলভ করে DNS Hosts-এ যোগ করুন</item>
         <item>রেজলভ করে ডোমেইন প্রতিস্থাপন করুন</item>
     </string-array>
+    <string name="summary_pref_exclude_from_recent">Only hides from the recent apps list when returning to the home screen via the Back key. Pressing the Home key or similar will not work.</string>
+    <string name="title_pref_exclude_from_recent">Hide this app from the recent apps list</string>
 
     <string-array name="policy_group_type">
         <item>সর্বনিম্ন পিং (leastPing)</item>

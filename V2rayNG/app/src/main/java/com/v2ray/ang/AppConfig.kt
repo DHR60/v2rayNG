@@ -77,6 +77,7 @@ object AppConfig {
     const val PREF_IP_API_URL = "pref_ip_api_url"
     const val PREF_LOGLEVEL = "pref_core_loglevel"
     const val PREF_OUTBOUND_DOMAIN_RESOLVE_METHOD = "pref_outbound_domain_resolve_method"
+    const val PREF_EXCLUDE_FROM_RECENT = "pref_exclude_from_recent"
     const val PREF_MODE = "pref_mode"
     const val PREF_ROOT_MODE_ENABLE = "pref_root_mode_enabled"
     const val PREF_ROOT_LAN_SHARING = "pref_root_lan_sharing"
