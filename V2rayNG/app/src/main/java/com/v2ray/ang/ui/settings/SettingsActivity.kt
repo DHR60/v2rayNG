@@ -211,6 +211,7 @@ private fun SettingsForm(
     var coreLogLevel by rememberMmkvString(AppConfig.PREF_LOGLEVEL, "warning")
     var outboundResolveMethod by rememberMmkvString(AppConfig.PREF_OUTBOUND_DOMAIN_RESOLVE_METHOD, AppConfig.DEFAULT_OUTBOUND_DOMAIN_RESOLVE_METHOD)
 
+    var excludeFromRecent by rememberMmkvBool(AppConfig.PREF_EXCLUDE_FROM_RECENT, false)
     var isBooted by rememberMmkvBool(AppConfig.PREF_IS_BOOTED, false)
     var delayTestUrl by rememberMmkvString(AppConfig.PREF_DELAY_TEST_URL, "")
     var realPingConcurrency by rememberMmkvString(AppConfig.PREF_REAL_PING_CONCURRENCY, "16")
@@ -677,6 +678,12 @@ private fun SettingsForm(
                 onExpandedChange = { advancedSettingsExpanded = it }
             )
             if (advancedSettingsExpanded) {
+                SettingsSwitchItem(
+                    title = stringResource(R.string.title_pref_exclude_from_recent),
+                    summary = stringResource(R.string.summary_pref_exclude_from_recent),
+                    checked = excludeFromRecent,
+                    onCheckedChange = { excludeFromRecent = it }
+                )
                 SettingsSwitchItem(
                     title = stringResource(R.string.title_pref_is_booted),
                     summary = stringResource(R.string.summary_pref_is_booted),

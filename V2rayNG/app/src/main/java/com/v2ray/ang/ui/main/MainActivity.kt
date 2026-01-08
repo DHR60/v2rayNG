@@ -1,5 +1,7 @@
 package com.v2ray.ang.ui.main
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.VpnService
@@ -118,10 +120,22 @@ abstract class BaseMainActivity : HelperBaseComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_EXCLUDE_FROM_RECENT) == true) {
+            setExcludeFromRecents(false)
+        }
+    }
+
     @Composable
     override fun ScreenContent() {
         if (forwardingToTv) return
-        BackHandler { moveTaskToBack(false) }
+        BackHandler {
+            if (MmkvManager.decodeSettingsBool(AppConfig.PREF_EXCLUDE_FROM_RECENT) == true) {
+                setExcludeFromRecents(true)
+            }
+            moveTaskToBack(false)
+        }
         MainContent(mainViewModel, ::handleMainAction, ::navigateTo)
     }
 
@@ -209,6 +223,17 @@ abstract class BaseMainActivity : HelperBaseComponentActivity() {
     private fun handleLayoutTestClick() {
         if (mainViewModel.uiState.value.isRunning) {
             mainViewModel.testCurrentServerRealPing()
+        }
+    }
+
+    protected fun setExcludeFromRecents(exclude: Boolean) {
+        try {
+            val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            activityManager.appTasks.forEach { task ->
+                task.setExcludeFromRecents(exclude)
+            }
+        } catch (e: Exception) {
+            LogUtil.e("MainActivity", "Failed to set excludeFromRecents", e)
         }
     }
 
@@ -325,6 +350,9 @@ class MainActivity : BaseMainActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BUTTON_B) {
+            if (MmkvManager.decodeSettingsBool(AppConfig.PREF_EXCLUDE_FROM_RECENT) == true) {
+                setExcludeFromRecents(true)
+            }
             moveTaskToBack(false)
             return true
         }
