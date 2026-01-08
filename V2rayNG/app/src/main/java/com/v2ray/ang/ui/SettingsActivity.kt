@@ -317,7 +317,8 @@ class SettingsActivity : BaseActivity() {
 //                AppConfig.PREF_DOUBLE_COLUMN_DISPLAY,
 //                AppConfig.PREF_PREFER_IPV6,
 //                AppConfig.PREF_PROXY_SHARING,
-//                AppConfig.PREF_ALLOW_INSECURE
+//                AppConfig.PREF_ALLOW_INSECURE,
+//                AppConfig.PREF_EXCLUDE_FROM_RECENT
 //            ).forEach { key ->
 //                findPreference<CheckBoxPreference>(key)?.isChecked =
 //                    MmkvManager.decodeSettingsBool(key, false)

@@ -1,6 +1,8 @@
 package com.v2ray.ang.ui
 
 import android.Manifest
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -166,6 +168,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                 } else {
+                    if (MmkvManager.decodeSettingsBool(AppConfig.PREF_EXCLUDE_FROM_RECENT) == true) {
+                        setExcludeFromRecents(true)
+                    }
                     isEnabled = false
                     onBackPressedDispatcher.onBackPressed()
                     isEnabled = true
@@ -234,6 +239,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onResume() {
         super.onResume()
+        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_EXCLUDE_FROM_RECENT) == true) {
+            setExcludeFromRecents(false)
+        }
     }
 
     override fun onPause() {
@@ -628,12 +636,25 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
+            if (MmkvManager.decodeSettingsBool(AppConfig.PREF_EXCLUDE_FROM_RECENT) == true) {
+                setExcludeFromRecents(true)
+            }
             moveTaskToBack(false)
             return true
         }
         return super.onKeyDown(keyCode, event)
     }
 
+    private fun setExcludeFromRecents(exclude: Boolean) {
+        try {
+            val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            activityManager.appTasks.forEach { task ->
+                task.setExcludeFromRecents(exclude)
+            }
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Failed to set excludeFromRecents", e)
+        }
+    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
