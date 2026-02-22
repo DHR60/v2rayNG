@@ -788,7 +788,7 @@ object V2rayConfigManager {
                 outbound.mux?.concurrency = MmkvManager.decodeSettingsString(AppConfig.PREF_MUX_CONCURRENCY, "8").orEmpty().toInt()
                 outbound.mux?.xudpConcurrency = MmkvManager.decodeSettingsString(AppConfig.PREF_MUX_XUDP_CONCURRENCY, "16").orEmpty().toInt()
                 outbound.mux?.xudpProxyUDP443 = MmkvManager.decodeSettingsString(AppConfig.PREF_MUX_XUDP_QUIC, "reject")
-                if (protocol.equals(EConfigType.VLESS.name, true) && outbound.settings?.vnext?.first()?.users?.first()?.flow?.isNotEmpty() == true) {
+                if (protocol.equals(EConfigType.VLESS.name, true) && outbound.settings?.flow?.isNotEmpty() == true) {
                     outbound.mux?.concurrency = -1
                 }
             } else {
@@ -1090,28 +1090,14 @@ object V2rayConfigManager {
     fun createInitOutbound(configType: EConfigType): OutboundBean? {
         return when (configType) {
             EConfigType.VMESS,
-            EConfigType.VLESS ->
-                return OutboundBean(
-                    protocol = configType.name.lowercase(),
-                    settings = OutSettingsBean(
-                        vnext = listOf(
-                            OutSettingsBean.VnextBean(
-                                users = listOf(OutSettingsBean.VnextBean.UsersBean())
-                            )
-                        )
-                    ),
-                    streamSettings = StreamSettingsBean()
-                )
-
+            EConfigType.VLESS,
             EConfigType.SHADOWSOCKS,
             EConfigType.SOCKS,
             EConfigType.HTTP,
             EConfigType.TROJAN ->
                 return OutboundBean(
                     protocol = configType.name.lowercase(),
-                    settings = OutSettingsBean(
-                        servers = listOf(OutSettingsBean.ServersBean())
-                    ),
+                    settings = OutSettingsBean(),
                     streamSettings = StreamSettingsBean()
                 )
 
@@ -1128,9 +1114,7 @@ object V2rayConfigManager {
             EConfigType.HYSTERIA2 ->
                 return OutboundBean(
                     protocol = EConfigType.HYSTERIA.name.lowercase(),
-                    settings = OutSettingsBean(
-                        servers = null
-                    ),
+                    settings = OutSettingsBean(),
                     streamSettings = StreamSettingsBean()
                 )
 

@@ -134,11 +134,11 @@ object ShadowsocksFmt : FmtBase() {
     fun toOutbound(profileItem: ProfileItem): OutboundBean? {
         val outboundBean = V2rayConfigManager.createInitOutbound(EConfigType.SHADOWSOCKS)
 
-        outboundBean?.settings?.servers?.first()?.let { server ->
-            server.address = getServerAddress(profileItem)
-            server.port = profileItem.serverPort.orEmpty().toInt()
-            server.password = profileItem.password
-            server.method = profileItem.method
+        outboundBean?.settings?.let { settings ->
+            settings.address = getServerAddress(profileItem)
+            settings.port = profileItem.serverPort.orEmpty().toInt()
+            settings.password = profileItem.password
+            settings.method = profileItem.method
         }
 
         val sni = outboundBean?.streamSettings?.let {

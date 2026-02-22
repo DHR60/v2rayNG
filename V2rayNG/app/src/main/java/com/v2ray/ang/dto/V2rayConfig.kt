@@ -67,10 +67,8 @@ data class V2rayConfig(
         var mux: MuxBean? = MuxBean(false)
     ) {
         data class OutSettingsBean(
-            var vnext: List<VnextBean>? = null,
             var fragment: FragmentBean? = null,
             var noises: List<NoiseBean>? = null,
-            var servers: List<ServersBean>? = null,
             /*Blackhole*/
             var response: Response? = null,
             /*DNS*/
@@ -90,23 +88,20 @@ data class V2rayConfig(
             var mtu: Int? = null,
             var obfsPassword: String? = null,
             var version: Int? = null,
+            var id: String? = "",
+            var alterId: Int? = null,
+            var security: String? = null,
+            var level: Int? = AppConfig.DEFAULT_LEVEL,
+            var encryption: String? = null,
+            var flow: String? = null,
+            var method: String? = null,
+            var ota: Boolean? = false,
+            var password: String? = null,
+            val email: String? = null,
+            val ivCheck: Boolean? = null,
+            var user: String? = "",
+            var pass: String? = "",
         ) {
-
-            data class VnextBean(
-                var address: String = "",
-                var port: Int = AppConfig.DEFAULT_PORT,
-                var users: List<UsersBean>
-            ) {
-
-                data class UsersBean(
-                    var id: String = "",
-                    var alterId: Int? = null,
-                    var security: String? = null,
-                    var level: Int = AppConfig.DEFAULT_LEVEL,
-                    var encryption: String? = null,
-                    var flow: String? = null
-                )
-            }
 
             data class FragmentBean(
                 var packets: String? = null,
@@ -119,25 +114,6 @@ data class V2rayConfig(
                 var packet: String? = null,
                 var delay: String? = null
             )
-
-            data class ServersBean(
-                var address: String = "",
-                var method: String? = null,
-                var ota: Boolean = false,
-                var password: String? = null,
-                var port: Int = AppConfig.DEFAULT_PORT,
-                var level: Int = AppConfig.DEFAULT_LEVEL,
-                val email: String? = null,
-                var flow: String? = null,
-                val ivCheck: Boolean? = null,
-                var users: List<SocksUsersBean>? = null
-            ) {
-                data class SocksUsersBean(
-                    var user: String = "",
-                    var pass: String = "",
-                    var level: Int = AppConfig.DEFAULT_LEVEL
-                )
-            }
 
             data class Response(var type: String)
 
@@ -327,45 +303,31 @@ data class V2rayConfig(
         )
 
         fun getServerAddress(): String? {
-            if (protocol.equals(EConfigType.VMESS.name, true)
-                || protocol.equals(EConfigType.VLESS.name, true)
-            ) {
-                return settings?.vnext?.first()?.address
-            } else if (protocol.equals(EConfigType.SHADOWSOCKS.name, true)
-                || protocol.equals(EConfigType.SOCKS.name, true)
-                || protocol.equals(EConfigType.HTTP.name, true)
-                || protocol.equals(EConfigType.TROJAN.name, true)
-            ) {
-                return settings?.servers?.first()?.address
-            } else if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
-                return settings?.peers?.first()?.endpoint?.substringBeforeLast(":")
-            } else if (protocol.equals(EConfigType.HYSTERIA2.name, true)
-                || protocol.equals(EConfigType.HYSTERIA.name, true)
-            ) {
+            if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
+                return settings?.peers
+                    ?.firstOrNull()
+                    ?.endpoint
+                    ?.substringBeforeLast(":")
+            }
+            if (settings?.address is String) {
                 return settings?.address as String?
+            }
+            if (settings?.address is List<*>) {
+                val addresses = settings?.address as? List<*>
+                return addresses?.firstOrNull() as? String
             }
             return null
         }
 
         fun getServerPort(): Int? {
-            if (protocol.equals(EConfigType.VMESS.name, true)
-                || protocol.equals(EConfigType.VLESS.name, true)
-            ) {
-                return settings?.vnext?.first()?.port
-            } else if (protocol.equals(EConfigType.SHADOWSOCKS.name, true)
-                || protocol.equals(EConfigType.SOCKS.name, true)
-                || protocol.equals(EConfigType.HTTP.name, true)
-                || protocol.equals(EConfigType.TROJAN.name, true)
-            ) {
-                return settings?.servers?.first()?.port
-            } else if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
-                return settings?.peers?.first()?.endpoint?.substringAfterLast(":")?.toInt()
-            } else if (protocol.equals(EConfigType.HYSTERIA2.name, true)
-                || protocol.equals(EConfigType.HYSTERIA.name, true)
-            ) {
-                return settings?.port
+            if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
+                return settings?.peers
+                    ?.firstOrNull()
+                    ?.endpoint
+                    ?.substringAfterLast(":")
+                    ?.toInt()
             }
-            return null
+            return settings?.port
         }
 
         fun ensureSockopt(): StreamSettingsBean.SockoptBean {
