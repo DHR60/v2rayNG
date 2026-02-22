@@ -595,19 +595,17 @@ object V2rayConfigManager {
 
             // domestic DNS
             val domesticDns = SettingsManager.getDomesticDnsServers()
-            val directDomain = getUserRule2Domain(AppConfig.TAG_DIRECT)
-            val isCnRoutingMode = directDomain.contains(AppConfig.GEOSITE_CN)
-            val geoipCn = arrayListOf(AppConfig.GEOIP_CN)
-            if (directDomain.isNotEmpty()) {
+            val domesticDnsTags = mutableListOf<String>()
+            domesticDns.forEachIndexed { index, element ->
+                val tag = AppConfig.TAG_DOMESTIC_DNS + index
                 servers.add(
                     V2rayConfig.DnsBean.ServersBean(
-                        address = domesticDns.first(),
-                        domains = directDomain,
-                        expectIPs = if (isCnRoutingMode) geoipCn else null,
+                        address = element,
                         skipFallback = true,
-                        tag = AppConfig.TAG_DOMESTIC_DNS
+                        tag = tag
                     )
                 )
+                domesticDnsTags.add(tag)
             }
 
             //block dns
@@ -649,12 +647,18 @@ object V2rayConfigManager {
                 hosts = hosts,
                 tag = AppConfig.TAG_DNS
             )
+            if (MmkvManager.decodeSettingsBool(AppConfig.PREF_DNS_SERVE_STALE, false) == true) {
+                v2rayConfig.dns?.serveStale = true
+            }
+            if (MmkvManager.decodeSettingsBool(AppConfig.PREF_DNS_PARALLEL_QUERY, false) == true) {
+                v2rayConfig.dns?.enableParallelQuery = true
+            }
 
             // DNS routing
             v2rayConfig.routing.rules.add(
                 RulesBean(
                     outboundTag = AppConfig.TAG_DIRECT,
-                    inboundTag = arrayListOf(AppConfig.TAG_DOMESTIC_DNS),
+                    inboundTag = domesticDnsTags,
                     domain = null
                 )
             )

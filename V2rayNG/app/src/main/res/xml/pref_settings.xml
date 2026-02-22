@@ -172,6 +172,16 @@
             android:summary="@string/summary_pref_dns_hosts"
             android:title="@string/title_pref_dns_hosts" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_dns_parallel_query"
+            android:title="@string/title_dns_parallel_query" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_dns_serve_stale"
+            android:title="@string/title_dns_serve_stale" />
+
         <ListPreference
             android:defaultValue="warning"
             android:entries="@array/core_loglevel"
