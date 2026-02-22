@@ -447,5 +447,7 @@
         <item>本地</item>
         <item>WebDAV</item>
     </string-array>
+    <string name="title_dns_parallel_query">DNS 并行查询</string>
+    <string name="title_dns_serve_stale">DNS 乐观缓存</string>
 
 </resources>
