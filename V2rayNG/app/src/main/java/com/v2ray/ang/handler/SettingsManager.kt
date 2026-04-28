@@ -385,6 +385,21 @@ object SettingsManager {
     }
 
     /**
+     * Get The Value for xray.browser.dialer(BrowserDialerAddress)
+     * @return A string of the value, empty when disabled
+     */
+    fun getBrowserDialerAddr(): String {
+        val BrowserDialerEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_BROWSER_DIALER_ENABLED)
+        var BrowserDialerAddr = ""
+        if (BrowserDialerEnabled) {
+            // Use :28080 by default because so many apps LOVEs to use :8080
+            BrowserDialerAddr = MmkvManager.decodeSettingsString(AppConfig.PREF_BROWSER_DIALER_ADDR) ?: "127.0.0.1:28080"
+        }
+        return BrowserDialerAddr
+    }
+
+
+    /**
      * Get delay test URL.
      * @param second Whether to use the second URL.
      * @return The delay test URL.

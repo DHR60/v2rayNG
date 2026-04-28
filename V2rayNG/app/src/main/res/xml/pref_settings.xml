@@ -237,6 +237,17 @@
             android:summary="%s"
             android:title="@string/title_outbound_domain_resolve_method" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_browser_dialer_enabled"
+            android:summary="@string/summary_pref_browser_dialer_enabled"
+            android:title="@string/title_pref_browser_dialer_enabled" />
+
+        <EditTextPreference
+            android:key="pref_browser_dialer_addr"
+            android:summary="@string/summary_pref_browser_dialer_addr"
+            android:title="@string/title_pref_browser_dialer_addr" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

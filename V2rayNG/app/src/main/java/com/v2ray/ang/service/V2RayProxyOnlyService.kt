@@ -13,6 +13,9 @@ import com.v2ray.ang.util.MyContextWrapper
 import java.lang.ref.SoftReference
 
 class V2RayProxyOnlyService : Service(), ServiceControl {
+
+    private val dialerNativeService = DialerNativeService()
+
     /**
      * Initializes the service.
      */
@@ -32,6 +35,7 @@ class V2RayProxyOnlyService : Service(), ServiceControl {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         LogUtil.i(AppConfig.TAG, "StartCore-Proxy: Service command received")
         V2RayServiceManager.startCoreLoop(null)
+        dialerNativeService.start(this)
         return START_STICKY
     }
 
@@ -41,6 +45,7 @@ class V2RayProxyOnlyService : Service(), ServiceControl {
     override fun onDestroy() {
         super.onDestroy()
         V2RayServiceManager.stopCoreLoop()
+        dialerNativeService.stop()
     }
 
     /**

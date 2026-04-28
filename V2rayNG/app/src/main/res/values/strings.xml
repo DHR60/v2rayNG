@@ -275,6 +275,10 @@
 
     <string name="title_core_loglevel">Log Level</string>
     <string name="title_outbound_domain_resolve_method">Outbound domain pre-resolve method</string>
+    <string name="title_pref_browser_dialer_enabled">Enable OkHttp Dialer</string>
+    <string name="summary_pref_browser_dialer_enabled">Only support xhttp (packet-up) and ws outbound</string>
+    <string name="title_pref_browser_dialer_addr">OkHttp Dialer Bind Address</string>
+    <string name="summary_pref_browser_dialer_addr">localhost:port</string>
     <string name="title_mode">Mode</string>
     <string name="title_mode_help">Click me for more help</string>
     <string name="title_language">Language</string>

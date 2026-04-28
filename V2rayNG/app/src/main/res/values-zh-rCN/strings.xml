@@ -451,5 +451,7 @@
     </string-array>
     <string name="title_dns_parallel_query">DNS 并行查询</string>
     <string name="title_dns_serve_stale">DNS 乐观缓存</string>
+    <string name="title_pref_browser_dialer_enabled">启用 OkHttp 拨号器</string>
+    <string name="summary_pref_browser_dialer_enabled">仅支持 xhttp (packet-up) 和 ws。与非标端口和优选域名冲突，utls, alpn, ech 等 TLS 设置将被忽略</string>
 
 </resources>

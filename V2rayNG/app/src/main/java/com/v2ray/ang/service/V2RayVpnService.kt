@@ -35,6 +35,8 @@ class V2RayVpnService : VpnService(), ServiceControl {
     private var isRunning = false
     private var tun2SocksService: Tun2SocksControl? = null
 
+    private val dialerNativeService = DialerNativeService()
+
     /**destroy
      * Unfortunately registerDefaultNetworkCallback is going to return our VPN interface: https://android.googlesource.com/platform/frameworks/base/+/dda156ab0c5d66ad82bdcf76cda07cbc0a9c8a2e
      *
@@ -133,6 +135,7 @@ class V2RayVpnService : VpnService(), ServiceControl {
             stopAllService()
             return
         }
+        dialerNativeService.start(this)
     }
 
     override fun stopService() {
@@ -362,6 +365,8 @@ class V2RayVpnService : VpnService(), ServiceControl {
         tun2SocksService = null
 
         V2RayServiceManager.stopCoreLoop()
+
+        dialerNativeService.stop()
 
         if (isForced) {
             //stopSelf has to be called ahead of mInterface.close(). otherwise v2ray core cannot be stooped
