@@ -256,8 +256,8 @@
     <string name="title_dns_serve_stale">DNS 乐观缓存</string>
     <string name="summary_dns_serve_stale">启用后，可降低 DNS 查询等待，过期结果仍会被使用，同时获取最新结果。</string>
 
-    <string name="title_pref_dns_hosts">DNS 主机映射（格式：domain:address,…）</string>
-    <string name="summary_pref_dns_hosts">domain: address,…</string>
+    <string name="title_pref_dns_hosts">DNS hosts (格式: “域名 地址1 地址2” 每行一个)</string>
+    <string name="summary_pref_dns_hosts">domain address1 address2\n…</string>
 
     <string name="title_pref_delay_test_url">真连接延迟测试 URL</string>
     <string name="summary_pref_delay_test_url" translatable="false">URL</string>
