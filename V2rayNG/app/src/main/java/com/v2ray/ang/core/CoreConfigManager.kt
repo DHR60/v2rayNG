@@ -873,17 +873,17 @@ object CoreConfigManager {
         val remoteDns = SettingsManager.getRemoteDnsServers()
         val domesticDns = SettingsManager.getDomesticDnsServers()
 
-        remoteDns.forEach { servers.add(it) }
-
         val hosts = buildDnsHostsFromRoutingRules(configContext)
-        val cnDomesticDnsTags = buildDnsCnModeFromRoutingRules(configContext, servers, domesticDns)
         val domesticDnsTags = buildDnsFromRoutingRules(
             configContext = configContext,
             servers = servers,
             remoteDns = remoteDns,
             domesticDns = domesticDns
         )
+        val cnDomesticDnsTags = buildDnsCnModeFromRoutingRules(configContext, servers, domesticDns)
         domesticDnsTags.addAll(cnDomesticDnsTags)
+
+        remoteDns.forEach { servers.add(it) }
 
         v2rayConfig.dns = V2rayConfig.DnsBean(
             servers = servers,
@@ -1017,34 +1017,66 @@ object CoreConfigManager {
         domesticDns: List<String>,
     ): MutableList<String> {
         val domesticDnsTags = mutableListOf<String>()
-        configContext.routingDomainRules.forEachIndexed { ruleIndex, rule ->
-            when (rule.outboundTag) {
-                AppConfig.TAG_DIRECT -> {
-                    domesticDns.forEachIndexed { dnsIndex, address ->
-                        val tag = "${AppConfig.TAG_DOMESTIC_DNS}_${ruleIndex}_$dnsIndex"
-                        servers.add(
-                            V2rayConfig.DnsBean.ServersBean(
-                                address = address,
-                                domains = rule.domain,
-                                skipFallback = true,
-                                tag = tag
-                            )
-                        )
-                        domesticDnsTags.add(tag)
-                    }
-                }
 
-                AppConfig.TAG_BLOCKED -> Unit
-                else -> {
-                    servers.add(
-                        V2rayConfig.DnsBean.ServersBean(
-                            address = remoteDns.first(),
-                            domains = rule.domain,
-                        )
-                    )
-                }
-            }
+        val cnRegionFilter = { domain: String ->
+            domain.startsWith("geosite:") && (domain.endsWith("-cn") || domain.endsWith("@cn"))
+                    || domain == AppConfig.GEOSITE_CN
         }
+        val (directGeositeList, directDomainList) = configContext.routingDomainRules.asSequence()
+            .filter { it.outboundTag == AppConfig.TAG_DIRECT }
+            .flatMap { it.domain.asSequence() }
+            .filterNot { cnRegionFilter(it) }
+            .toList()
+            .distinct()
+            .partition { it.startsWith("geosite:") }
+        val (proxyGeositeList, proxyDomainList) = configContext.routingDomainRules.asSequence()
+            .filter { it.outboundTag != AppConfig.TAG_BLOCKED && it.outboundTag != AppConfig.TAG_DIRECT }
+            .flatMap { it.domain.asSequence() }
+            .toList()
+            .distinct()
+            .partition { it.startsWith("geosite:") }
+
+        remoteDns.forEach { remoteDnsItem ->
+            servers.add(
+                V2rayConfig.DnsBean.ServersBean(
+                    address = remoteDnsItem,
+                    domains = proxyDomainList,
+                )
+            )
+        }
+        domesticDns.forEachIndexed { index, domesticDnsItem ->
+            val tag = "${AppConfig.TAG_DOMESTIC_DNS}_${index}"
+            servers.add(
+                V2rayConfig.DnsBean.ServersBean(
+                    address = domesticDnsItem,
+                    domains = directDomainList,
+                    skipFallback = true,
+                    tag = tag
+                )
+            )
+            domesticDnsTags.add(tag)
+        }
+        remoteDns.forEach { remoteDnsItem ->
+            servers.add(
+                V2rayConfig.DnsBean.ServersBean(
+                    address = remoteDnsItem,
+                    domains = proxyGeositeList,
+                )
+            )
+        }
+        domesticDns.forEachIndexed { index, domesticDnsItem ->
+            val tag = "${AppConfig.TAG_DOMESTIC_DNS}_geosite_${index}"
+            servers.add(
+                V2rayConfig.DnsBean.ServersBean(
+                    address = domesticDnsItem,
+                    domains = directGeositeList,
+                    skipFallback = true,
+                    tag = tag
+                )
+            )
+            domesticDnsTags.add(tag)
+        }
+
         return domesticDnsTags
     }
 
