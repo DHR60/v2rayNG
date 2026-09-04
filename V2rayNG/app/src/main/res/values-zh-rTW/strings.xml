@@ -511,6 +511,8 @@
 
     <string name="backup_location_local">本機</string>
     <string name="backup_location_webdav" translatable="false">WebDAV</string>
+    <string name="title_dns_parallel_query">DNS Parallel Query</string>
+    <string name="title_dns_serve_stale">DNS Serve Stale</string>
 
     <string name="acc_refresh">重新整理日誌</string>
     <string name="toast_permission_denied_for">未授予 %1$s 權限</string>

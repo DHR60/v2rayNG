@@ -511,6 +511,8 @@
 
     <string name="backup_location_local">本地</string>
     <string name="backup_location_webdav" translatable="false">WebDAV</string>
+    <string name="title_dns_parallel_query">DNS 并行查询</string>
+    <string name="title_dns_serve_stale">DNS 乐观缓存</string>
 
     <string name="acc_refresh">刷新日志</string>
     <string name="toast_permission_denied_for">%1$s权限被拒绝</string>
