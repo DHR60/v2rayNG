@@ -815,13 +815,16 @@ object CoreConfigManager {
         //User DNS hosts
         val userHosts = MmkvManager.decodeSettingsString(AppConfig.PREF_DNS_HOSTS)
         if (userHosts.isNotNullEmpty()) {
-            val userHostsMap = userHosts?.split(",")
+            val userHostsMap = userHosts?.lines()
                 ?.filter { it.isNotEmpty() }
-                ?.filter { it.contains(":") }
-                ?.associate { it.split(":").let { (k, v) -> k to v } }
-            if (userHostsMap != null) {
-                hosts.putAll(userHostsMap)
-            }
+                ?.filter { it.contains(" ") }
+                ?.associate { line ->
+                    val parts = line.trim().split("\\s+".toRegex())
+                    val key = parts[0]
+                    val values = parts.drop(1)
+                    key to if (values.size == 1) values[0] else values
+                }
+            if (userHostsMap != null) hosts.putAll(userHostsMap)
         }
 
         // DNS dns
@@ -958,16 +961,16 @@ object CoreConfigManager {
 
         val userHosts = MmkvManager.decodeSettingsString(AppConfig.PREF_DNS_HOSTS)
         if (userHosts.isNotNullEmpty()) {
-            val userHostsMap = userHosts?.split(",").orEmpty()
-                .filter { it.isNotBlank() && it.contains(":") }
-                .associate {
-                    // Use limit = 2 to split only at the first colon.
-                    // This ensures that IPv6 addresses (which contain multiple colons)
-                    // are preserved entirely in the second part.
-                    val parts = it.split(":", limit = 2)
-                    parts[0].trim() to parts[1].trim()
+            val userHostsMap = userHosts?.lines()
+                ?.filter { it.isNotEmpty() }
+                ?.filter { it.contains(" ") }
+                ?.associate { line ->
+                    val parts = line.trim().split("\\s+".toRegex())
+                    val key = parts[0]
+                    val values = parts.drop(1)
+                    key to if (values.size == 1) values[0] else values
                 }
-            hosts.putAll(userHostsMap)
+            if (userHostsMap != null) hosts.putAll(userHostsMap)
         }
 
         return hosts
